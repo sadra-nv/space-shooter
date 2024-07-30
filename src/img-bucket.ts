@@ -1,0 +1,41 @@
+interface ToLoad {
+  playerSpriteSheet: string;
+  engineSpriteSheet: string;
+}
+
+type Images = {
+  playerSpriteSheet: { image: HTMLImageElement; isLoaded: boolean };
+  engineSpriteSheet: { image: HTMLImageElement; isLoaded: boolean };
+};
+
+class Resources {
+  toLoad: ToLoad;
+  images: Images;
+
+  constructor() {
+    // Everything we plan to download
+    this.toLoad = {
+      playerSpriteSheet: "/tyrian-space-ship.png",
+      engineSpriteSheet: "/jet-engine-sprite.png",
+    };
+
+    // A bucket to keep all of our images
+    this.images = {} as Images;
+
+    // Load each image
+    Object.keys(this.toLoad).forEach((key) => {
+      const img = new Image();
+      img.src = this.toLoad[key as keyof ToLoad];
+      this.images[key as keyof Images] = {
+        image: img,
+        isLoaded: false,
+      };
+      img.onload = () => {
+        this.images[key as keyof Images].isLoaded = true;
+      };
+    });
+  }
+}
+
+// Create one instance for the whole app to use
+export const resources = new Resources();
