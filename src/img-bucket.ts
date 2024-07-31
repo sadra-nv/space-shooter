@@ -3,9 +3,14 @@ interface ToLoad {
   engineSpriteSheet: string;
 }
 
+export interface InitSprite {
+  image: HTMLImageElement;
+  isLoaded: boolean;
+}
+
 type Images = {
-  playerSpriteSheet: { image: HTMLImageElement; isLoaded: boolean };
-  engineSpriteSheet: { image: HTMLImageElement; isLoaded: boolean };
+  playerSpriteSheet: InitSprite;
+  engineSpriteSheet: InitSprite;
 };
 
 class Resources {

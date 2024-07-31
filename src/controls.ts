@@ -1,5 +1,5 @@
 import { canvas } from "./main";
-import { playerSpriteWidth, playerSpriteHeight } from "./player";
+import { player } from "./player";
 
 let start = false;
 let playerSelected = false;
@@ -7,24 +7,24 @@ let screenSide: "LEFT" | "RIGHT" | "NONE"; //USED FOR ANIMATING THE SHIP SPRITE
 let prevMousePos: number;
 
 const playerCoor = {
-  x: window.innerWidth / 2 - playerSpriteWidth,
-  y: window.innerHeight - playerSpriteHeight * 4,
+  x: window.innerWidth / 2 - player.spriteWidth,
+  y: window.innerHeight - player.spriteHeight * 4,
 };
 
 function Controls() {
-  playerCoor.x = canvas.width / 2 - playerSpriteWidth;
-  playerCoor.y = canvas.height - playerSpriteHeight * 4;
+  playerCoor.x = canvas.width / 2 - player.spriteWidth;
+  playerCoor.y = canvas.height - player.spriteHeight * 4;
 
   const mouseMoveHandler = (event: MouseEvent) => {
     if (
       playerSelected &&
-      event.offsetX < canvas.width - playerSpriteWidth * 2 &&
-      event.offsetX > playerSpriteWidth &&
-      event.offsetY > playerSpriteHeight &&
-      event.offsetY < canvas.height - playerSpriteHeight
+      event.offsetX < canvas.width - player.spriteWidth * 2 &&
+      event.offsetX > player.spriteWidth &&
+      event.offsetY > player.spriteHeight &&
+      event.offsetY < canvas.height - player.spriteHeight
     ) {
       playerCoor.x = event.offsetX - 25;
-      playerCoor.y = event.offsetY - playerSpriteHeight * 3;
+      playerCoor.y = event.offsetY - player.spriteHeight * 3;
     }
 
     if (playerSelected) {
@@ -39,10 +39,10 @@ function Controls() {
   };
   const mousePressedHandler = (event: MouseEvent) => {
     if (
-      event.offsetX - playerCoor.x < playerSpriteWidth * 4 &&
-      event.offsetX - playerCoor.x > -playerSpriteWidth * 4 &&
-      event.offsetY - playerCoor.y < playerSpriteHeight * 4 &&
-      event.offsetY - playerCoor.y > -playerSpriteHeight
+      event.offsetX - playerCoor.x < player.spriteWidth * 4 &&
+      event.offsetX - playerCoor.x > -player.spriteWidth * 4 &&
+      event.offsetY - playerCoor.y < player.spriteHeight * 4 &&
+      event.offsetY - playerCoor.y > -player.spriteHeight
     ) {
       start = true;
       playerSelected = true;
@@ -55,7 +55,7 @@ function Controls() {
 
   canvas?.addEventListener("mousemove", mouseMoveHandler);
   canvas?.addEventListener("mousedown", mousePressedHandler);
-  canvas?.addEventListener("mouseup", mouseReleaseHandler);
+  window?.addEventListener("mouseup", mouseReleaseHandler);
 }
 
 export {
