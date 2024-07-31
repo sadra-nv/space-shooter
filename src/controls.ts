@@ -18,7 +18,7 @@ function Controls() {
   const mouseMoveHandler = (event: MouseEvent) => {
     if (
       playerSelected &&
-      event.offsetX < canvas.width - player.spriteWidth * 2 &&
+      event.offsetX < canvas.width - player.spriteWidth * 3 &&
       event.offsetX > player.spriteWidth &&
       event.offsetY > player.spriteHeight &&
       event.offsetY < canvas.height - player.spriteHeight

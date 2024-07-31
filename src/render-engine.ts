@@ -1,5 +1,6 @@
+import beamEnemy from "./beam-enemy";
 import { Controls } from "./controls";
-import { ctx } from "./main";
+import { canvas, ctx } from "./main";
 
 import { playerNode } from "./player";
 
@@ -17,6 +18,8 @@ function RenderEngine() {
 
     playerNode();
 
+    // RENDERING THE BEAM SHOOTING ENEMIES
+    beamEnemy(ctx, canvas);
     ctx.shadowBlur = 0;
     ctx.shadowOffsetY = 0;
 

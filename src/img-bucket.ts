@@ -1,6 +1,7 @@
 interface ToLoad {
   playerSpriteSheet: string;
   engineSpriteSheet: string;
+  beamEnemySpriteSheet: string;
 }
 
 export interface InitSprite {
@@ -11,6 +12,7 @@ export interface InitSprite {
 type Images = {
   playerSpriteSheet: InitSprite;
   engineSpriteSheet: InitSprite;
+  beamEnemySpriteSheet: InitSprite;
 };
 
 class Resources {
@@ -22,6 +24,7 @@ class Resources {
     this.toLoad = {
       playerSpriteSheet: "/tyrian-space-ship.png",
       engineSpriteSheet: "/jet-engine-sprite.png",
+      beamEnemySpriteSheet: "/beam-enemy.png",
     };
 
     // A bucket to keep all of our images

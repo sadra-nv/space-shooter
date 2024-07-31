@@ -1,18 +1,8 @@
 import { playerCoor, playerSelected, start } from "./controls";
 import { player } from "./player";
 
-type LaserPair = {
-  velocity: number;
-  drawnFrame: number;
-  y: number;
-  single: { left: { x: number }; right: { x: number } };
-  draw: (ctx: CanvasRenderingContext2D) => void;
-};
-
 // setting up lasers
-type Lasers = LaserPair[];
-
-const lasers: Lasers = [];
+const lasers: InitLaserPair[] = [];
 let laserCounter = 0;
 
 class InitLaserPair {
@@ -70,9 +60,9 @@ function PlayerLasers(
     if (isPlayerSelected) {
       const initLaserPair = new InitLaserPair();
 
-      if (!lasers[0]) {
+      if (lasers.length < 1) {
         lasers.push(initLaserPair);
-      } else if (laserCounter >= 30) {
+      } else if (laserCounter >= 60) {
         lasers.push(initLaserPair);
         laserCounter = 0;
       }
