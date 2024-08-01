@@ -7,6 +7,7 @@ import { SpriteSheet } from "./sprite-sheet";
 
 class Player extends SpriteSheet {
   gravity;
+  destroyed;
   constructor(
     cols: number,
     rows: number,
@@ -18,20 +19,23 @@ class Player extends SpriteSheet {
   ) {
     super(cols, rows, sprite, spriteSrcX, spriteSrcY, currentFrame, drawnFrame);
     this.gravity = 0;
+    this.destroyed = false;
   }
 
   draw(ctx: CanvasRenderingContext2D) {
-    ctx.drawImage(
-      this.sprite.image,
-      this.spriteSrcX,
-      this.spriteSrcY,
-      this.spriteWidth,
-      this.spriteHeight,
-      playerCoor.x,
-      playerCoor.y,
-      this.spriteWidth * 4,
-      this.spriteHeight * 4
-    );
+    if (!this.destroyed) {
+      ctx.drawImage(
+        this.sprite.image,
+        this.spriteSrcX,
+        this.spriteSrcY,
+        this.spriteWidth,
+        this.spriteHeight,
+        playerCoor.x,
+        playerCoor.y,
+        this.spriteWidth * 4,
+        this.spriteHeight * 4
+      );
+    }
   }
 
   handleGravity(isPlayerSelected: boolean) {

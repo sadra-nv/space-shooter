@@ -1,6 +1,7 @@
-import { start } from "./controls";
+import { playerCoor, start } from "./controls";
 import { ExplosionSheet } from "./explosion-sheet";
 import { InitSprite, resources } from "./img-bucket";
+import { player } from "./player";
 import { lasers } from "./player-lasers";
 import { SpriteSheet } from "./sprite-sheet";
 
@@ -256,6 +257,19 @@ export default function beamEnemy(
 
       //COLISION DETECTION
       beamEnemy.playerLaserColision(ctx, beamEnemy, index);
+
+      // beamEnemy.laserLength
+      if (
+        beamEnemy.x + (beamEnemy.spriteWidth * 3) / 2 - 12 > playerCoor.x &&
+        beamEnemy.x + (beamEnemy.spriteWidth * 3) / 2 - 12 <
+          playerCoor.x + player.spriteWidth * 4 &&
+        beamEnemy.y + beamEnemy.spriteHeight * 3 - 25 + beamEnemy.laserLength >
+          playerCoor.y
+        // beamEnemy.y + beamEnemy.spriteHeight * 3 - 25 + beamEnemy.laserLength <
+        //   playerCoor.y + player.spriteHeight * 4
+      ) {
+        player.destroyed = true;
+      }
     }
 
     // pushing new items to the enemy array

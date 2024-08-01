@@ -23,17 +23,19 @@ class EngineFire extends SpriteSheet {
     ctx.shadowColor = "orange";
     ctx.shadowOffsetY = 5;
     ctx.shadowBlur = 20;
-    ctx.drawImage(
-      engineFire.sprite.image,
-      engineFire.spriteSrcX,
-      engineFire.spriteSrcY,
-      engineFire.spriteWidth,
-      engineFire.spriteHeight,
-      playerCoor.x + engineFire.xOffset,
-      playerCoor.y + player.spriteHeight * 4 - 5,
-      engineFire.spriteWidth * 4,
-      engineFire.spriteHeight * 4
-    );
+    if (!player.destroyed) {
+      ctx.drawImage(
+        engineFire.sprite.image,
+        engineFire.spriteSrcX,
+        engineFire.spriteSrcY,
+        engineFire.spriteWidth,
+        engineFire.spriteHeight,
+        playerCoor.x + engineFire.xOffset,
+        playerCoor.y + player.spriteHeight * 4 - 5,
+        engineFire.spriteWidth * 4,
+        engineFire.spriteHeight * 4
+      );
+    }
   }
 
   animate() {

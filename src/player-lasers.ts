@@ -65,7 +65,7 @@ function PlayerLasers(
     }
 
     // pushing new items to the lasers array
-    if (isPlayerSelected) {
+    if (isPlayerSelected && !player.destroyed) {
       const initLaserPair = new InitLaserPair();
 
       if (lasers.length < 1) {
