@@ -8,11 +8,11 @@ let animationID: number;
 
 function RenderEngine() {
   if (!ctx) return;
-  ctx.imageSmoothingEnabled = false;
   Controls();
 
   const renderer = () => {
     if (!ctx) return;
+    ctx.imageSmoothingEnabled = false;
 
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 

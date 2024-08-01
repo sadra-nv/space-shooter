@@ -67,16 +67,17 @@ function PlayerLasers(
     // pushing new items to the lasers array
     if (isPlayerSelected && !player.destroyed) {
       const initLaserPair = new InitLaserPair();
+      let prevY = 0;
 
       if (lasers.length < 1) {
         lasers.push(initLaserPair);
-      } else if (laserCounter >= 60) {
+      } else if (laserCounter >= 60 && prevY === playerCoor.y) {
         lasers.push(initLaserPair);
         laserCounter = 0;
+        prevY = playerCoor.y;
       }
+      laserCounter++;
     }
-
-    laserCounter++;
   }
 }
 

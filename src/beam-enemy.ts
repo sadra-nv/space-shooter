@@ -6,7 +6,7 @@ import { lasers } from "./player-lasers";
 import { SpriteSheet } from "./sprite-sheet";
 
 class BeamEnemy extends SpriteSheet {
-  laserDrawnFrame: number;
+  laserDrawnFrame;
   y;
   x;
   laserLength;
@@ -19,6 +19,8 @@ class BeamEnemy extends SpriteSheet {
   invisibility;
   hp;
   explosionFlag;
+  gravity;
+  gravityDrawnFrame;
   constructor(
     cols: number,
     rows: number,
@@ -42,14 +44,31 @@ class BeamEnemy extends SpriteSheet {
     this.shadowColor = "blue";
     this.id = id;
     this.invisibility = true;
-    this.hp = 9;
+    this.hp = 6;
     this.explosionFlag = false;
+    this.gravity = 0;
+    this.gravityDrawnFrame = 0;
   }
 
-  draw(ctx: CanvasRenderingContext2D) {
+  draw(ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement) {
     ctx.shadowColor = this.shadowColor;
     ctx.shadowBlur = 10;
     ctx.shadowOffsetY = 0;
+
+    if (this.gravityDrawnFrame > 10 && this.laserIsFired) {
+      this.gravity++;
+      this.velocity += this.gravity;
+      this.gravity = 0;
+      this.gravityDrawnFrame = 0;
+    }
+    this.gravityDrawnFrame++;
+
+    if (this.y > canvas.height + 200) {
+      sceneDrawnFrame = 0;
+      beamEnemies.length = 0;
+    }
+
+    this.y += this.velocity;
 
     ctx.drawImage(
       this.sprite.image,
@@ -58,14 +77,14 @@ class BeamEnemy extends SpriteSheet {
       this.spriteWidth,
       this.spriteHeight,
       this.x,
-      (this.y += this.velocity),
+      this.y,
       this.spriteWidth * 3,
       this.spriteHeight * 3
     );
   }
 
   moveDown() {
-    if (this.drawnFrame >= 10) {
+    if (this.drawnFrame >= 15) {
       if (this.velocity == 0) {
         this.velocity = 0;
         this.currentFrame !== 0 && this.currentFrame--;
@@ -171,42 +190,36 @@ class BeamEnemy extends SpriteSheet {
     }
   }
 
-  playerLaserColision(
-    ctx: CanvasRenderingContext2D,
-    beamEnemy: BeamEnemy,
-    index: number
-  ) {
+  playerLaserColision(ctx: CanvasRenderingContext2D, index: number) {
     if (lasers[0]) {
       if (
-        lasers[0].single.left.x > beamEnemy.x &&
-        lasers[0].single.left.x < beamEnemy.x + beamEnemy.spriteWidth * 3 &&
-        lasers[0].y - 10 - lasers[0].velocity > beamEnemy.y &&
-        lasers[0].y - 10 - lasers[0].velocity <
-          beamEnemy.y + beamEnemy.spriteHeight * 3
+        lasers[0].single.left.x > this.x &&
+        lasers[0].single.left.x < this.x + this.spriteWidth * 3 &&
+        lasers[0].y - 10 - lasers[0].velocity > this.y &&
+        lasers[0].y - 10 - lasers[0].velocity < this.y + this.spriteHeight * 3
       ) {
         lasers[0].single.left.destroy = true;
 
-        if (!beamEnemy.invisibility) {
-          beamEnemy.hp--;
-          beamEnemy.explosionFlag = true;
-          if (beamEnemy.hp === 0) {
+        if (!this.invisibility) {
+          this.hp--;
+          this.explosionFlag = true;
+          if (this.hp === 0) {
             beamEnemies.splice(index, 1);
             sceneDrawnFrame = 0;
           }
         }
       }
       if (
-        lasers[0].single.right.x > beamEnemy.x &&
-        lasers[0].single.right.x < beamEnemy.x + beamEnemy.spriteWidth * 3 &&
-        lasers[0].y - 10 - lasers[0].velocity > beamEnemy.y &&
-        lasers[0].y - 10 - lasers[0].velocity <
-          beamEnemy.y + beamEnemy.spriteHeight * 3
+        lasers[0].single.right.x > this.x &&
+        lasers[0].single.right.x < this.x + this.spriteWidth * 3 &&
+        lasers[0].y - 10 - lasers[0].velocity > this.y &&
+        lasers[0].y - 10 - lasers[0].velocity < this.y + this.spriteHeight * 3
       ) {
         lasers[0].single.right.destroy = true;
-        if (!beamEnemy.invisibility) {
-          beamEnemy.hp--;
-          beamEnemy.explosionFlag = true;
-          if (beamEnemy.hp === 0) {
+        if (!this.invisibility) {
+          this.hp--;
+          this.explosionFlag = true;
+          if (this.hp === 0) {
             beamEnemies.splice(index, 1);
             sceneDrawnFrame = 0;
           }
@@ -214,7 +227,18 @@ class BeamEnemy extends SpriteSheet {
       }
     }
 
-    explosion.explode(ctx, beamEnemy, 2);
+    explosion.explode(ctx, this, 2);
+  }
+
+  cannonColision() {
+    if (
+      this.x + (this.spriteWidth * 3) / 2 - 12 > playerCoor.x &&
+      this.x + (this.spriteWidth * 3) / 2 - 12 <
+        playerCoor.x + player.spriteWidth * 4 &&
+      this.y + this.spriteHeight * 3 - 25 + this.laserLength > playerCoor.y
+    ) {
+      player.destroyed = true;
+    }
   }
 }
 
@@ -242,7 +266,7 @@ export default function beamEnemy(
 
       if (beamEnemy.sprite.image && beamEnemy.sprite.isLoaded) {
         // drawing the enemies
-        beamEnemy.draw(ctx);
+        beamEnemy.draw(ctx, canvas);
         beamEnemy.drawnFrame++;
 
         // MOVING DOWN FROM THE SCREEN TOP
@@ -256,24 +280,14 @@ export default function beamEnemy(
       }
 
       //COLISION DETECTION
-      beamEnemy.playerLaserColision(ctx, beamEnemy, index);
+      beamEnemy.playerLaserColision(ctx, index);
 
       // beamEnemy.laserLength
-      if (
-        beamEnemy.x + (beamEnemy.spriteWidth * 3) / 2 - 12 > playerCoor.x &&
-        beamEnemy.x + (beamEnemy.spriteWidth * 3) / 2 - 12 <
-          playerCoor.x + player.spriteWidth * 4 &&
-        beamEnemy.y + beamEnemy.spriteHeight * 3 - 25 + beamEnemy.laserLength >
-          playerCoor.y
-        // beamEnemy.y + beamEnemy.spriteHeight * 3 - 25 + beamEnemy.laserLength <
-        //   playerCoor.y + player.spriteHeight * 4
-      ) {
-        player.destroyed = true;
-      }
+      beamEnemy.cannonColision();
     }
 
     // pushing new items to the enemy array
-    if (beamEnemies.length < 1 && sceneDrawnFrame >= 300) {
+    if (beamEnemies.length < 1 && sceneDrawnFrame >= 200) {
       const beamCannonEnemy = new BeamEnemy(
         3,
         1,
@@ -307,7 +321,11 @@ export default function beamEnemy(
         -50,
         -canvas.width / 3
       );
-      beamEnemies.push(beamCannonEnemy, beamCannonEnemy2, beamCannonEnemy3);
+      if (window.innerWidth > 570) {
+        beamEnemies.push(beamCannonEnemy, beamCannonEnemy2, beamCannonEnemy3);
+      } else {
+        beamEnemies.push(beamCannonEnemy2, beamCannonEnemy3);
+      }
       sceneDrawnFrame = 0;
     }
     sceneDrawnFrame++;

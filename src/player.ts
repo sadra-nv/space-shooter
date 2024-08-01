@@ -43,7 +43,7 @@ class Player extends SpriteSheet {
       this.gravity = 0;
     } else if (start) {
       this.gravity = 1;
-      if (playerCoor.y == canvas.height - this.spriteHeight * 4) {
+      if (playerCoor.y === canvas.height - this.spriteHeight * 4) {
         this.gravity = 0;
       }
     }

@@ -20,3 +20,11 @@ canvas {
   border-right: 2px darkred solid;
   image-rendering: pixelated;
 }
+
+@media only screen and (max-width: 570px) {
+  canvas {
+    border-left: none;
+    border-right: none;
+    image-rendering: pixelated;
+  }
+}

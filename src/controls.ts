@@ -3,6 +3,7 @@ import { player } from "./player";
 
 let start = false;
 let playerSelected = false;
+let grabbed = false;
 let screenSide: "LEFT" | "RIGHT" | "NONE"; //USED FOR ANIMATING THE SHIP SPRITE
 let prevMousePos: number;
 
@@ -35,6 +36,20 @@ function Controls() {
       }
     }
 
+    if (
+      event.offsetX - playerCoor.x < player.spriteWidth * 4 &&
+      event.offsetX - playerCoor.x > -player.spriteWidth * 4 &&
+      event.offsetY - playerCoor.y < player.spriteHeight * 4 &&
+      event.offsetY - playerCoor.y > -player.spriteHeight
+    ) {
+      if (!grabbed) {
+        canvas.style.cursor = "grab";
+      }
+    }
+    if (grabbed) {
+      canvas.style.cursor = "grabbing";
+    }
+
     prevMousePos = event.offsetX;
   };
   const mousePressedHandler = (event: MouseEvent) => {
@@ -46,16 +61,20 @@ function Controls() {
     ) {
       start = true;
       playerSelected = true;
+      canvas.style.cursor = "grabbing";
+      grabbed = true;
     }
   };
   const mouseReleaseHandler = () => {
     playerSelected = false;
     screenSide = "NONE";
+    canvas.style.cursor = "default";
+    grabbed = false;
   };
 
-  canvas?.addEventListener("mousemove", mouseMoveHandler);
-  canvas?.addEventListener("mousedown", mousePressedHandler);
-  window?.addEventListener("mouseup", mouseReleaseHandler);
+  canvas?.addEventListener("pointermove", mouseMoveHandler);
+  canvas?.addEventListener("pointerdown", mousePressedHandler);
+  window?.addEventListener("pointerup", mouseReleaseHandler);
 }
 
 export {
