@@ -1,17 +1,8 @@
 import { start } from "./controls";
+import { ExplosionSheet } from "./explosion-sheet";
 import { InitSprite, resources } from "./img-bucket";
 import { lasers } from "./player-lasers";
 import { SpriteSheet } from "./sprite-sheet";
-
-function getRandomNumberBetween1And9(prev: number) {
-  let newNumber;
-  do {
-    newNumber = Math.round(Math.random() * (9 - 1) + 1);
-  } while (newNumber === prev + 1 || newNumber === prev - 1);
-  return newNumber;
-}
-
-let previousNumber = 0;
 
 class BeamEnemy extends SpriteSheet {
   laserDrawnFrame: number;
@@ -24,6 +15,9 @@ class BeamEnemy extends SpriteSheet {
   laserBuildUpColor: string | CanvasGradient;
   shadowColor;
   id;
+  invisibility;
+  hp;
+  explosionFlag;
   constructor(
     cols: number,
     rows: number,
@@ -32,7 +26,8 @@ class BeamEnemy extends SpriteSheet {
     spriteSrcY: number,
     currentFrame: number,
     drawnFrame: number,
-    y: number
+    y: number,
+    id: number
   ) {
     super(cols, rows, sprite, spriteSrcX, spriteSrcY, currentFrame, drawnFrame);
     this.laserDrawnFrame = 0;
@@ -44,7 +39,10 @@ class BeamEnemy extends SpriteSheet {
     this.laserBuildUpWidth = 0;
     this.laserBuildUpColor = "blue";
     this.shadowColor = "blue";
-    this.id = getRandomNumberBetween1And9(previousNumber);
+    this.id = id;
+    this.invisibility = true;
+    this.hp = 9;
+    this.explosionFlag = false;
   }
 
   draw(ctx: CanvasRenderingContext2D) {
@@ -151,6 +149,7 @@ class BeamEnemy extends SpriteSheet {
       }
 
       this.shadowColor = "transparent";
+      this.invisibility = false;
       ctx.beginPath();
 
       ctx.fillStyle = this.laserBuildUpColor;
@@ -170,11 +169,66 @@ class BeamEnemy extends SpriteSheet {
       this.laserDrawnFrame++;
     }
   }
+
+  playerLaserColision(
+    ctx: CanvasRenderingContext2D,
+    beamEnemy: BeamEnemy,
+    index: number
+  ) {
+    if (lasers[0]) {
+      if (
+        lasers[0].single.left.x > beamEnemy.x &&
+        lasers[0].single.left.x < beamEnemy.x + beamEnemy.spriteWidth * 3 &&
+        lasers[0].y - 10 - lasers[0].velocity > beamEnemy.y &&
+        lasers[0].y - 10 - lasers[0].velocity <
+          beamEnemy.y + beamEnemy.spriteHeight * 3
+      ) {
+        lasers[0].single.left.destroy = true;
+
+        if (!beamEnemy.invisibility) {
+          beamEnemy.hp--;
+          beamEnemy.explosionFlag = true;
+          if (beamEnemy.hp === 0) {
+            beamEnemies.splice(index, 1);
+            sceneDrawnFrame = 0;
+          }
+        }
+      }
+      if (
+        lasers[0].single.right.x > beamEnemy.x &&
+        lasers[0].single.right.x < beamEnemy.x + beamEnemy.spriteWidth * 3 &&
+        lasers[0].y - 10 - lasers[0].velocity > beamEnemy.y &&
+        lasers[0].y - 10 - lasers[0].velocity <
+          beamEnemy.y + beamEnemy.spriteHeight * 3
+      ) {
+        lasers[0].single.right.destroy = true;
+        if (!beamEnemy.invisibility) {
+          beamEnemy.hp--;
+          beamEnemy.explosionFlag = true;
+          if (beamEnemy.hp === 0) {
+            beamEnemies.splice(index, 1);
+            sceneDrawnFrame = 0;
+          }
+        }
+      }
+    }
+
+    explosion.explode(ctx, beamEnemy, 2);
+  }
 }
 
 const beamEnemies: BeamEnemy[] = [];
 let sceneDrawnFrame = 0;
 
+const explosion = new ExplosionSheet(
+  9,
+  1,
+  resources.images.explosionSpriteSheet,
+  0,
+  0,
+  1,
+  0
+);
 export default function beamEnemy(
   ctx: CanvasRenderingContext2D,
   canvas: HTMLCanvasElement
@@ -183,7 +237,7 @@ export default function beamEnemy(
     for (let index = 0; index < beamEnemies.length; index++) {
       const beamEnemy = beamEnemies[index];
       beamEnemy.spriteSrcX = beamEnemy.currentFrame * beamEnemy.spriteWidth;
-      beamEnemy.x = beamEnemy.spriteWidth * 2 + canvas.width / beamEnemy.id;
+      beamEnemy.x = canvas.width / 2 + beamEnemy.id - beamEnemy.spriteWidth * 3;
 
       if (beamEnemy.sprite.image && beamEnemy.sprite.isLoaded) {
         // drawing the enemies
@@ -201,29 +255,11 @@ export default function beamEnemy(
       }
 
       //COLISION DETECTION
-      if (lasers[0] && start) {
-        if (
-          lasers[0].single.left.x > beamEnemy.x &&
-          lasers[0].single.left.x < beamEnemy.x + beamEnemy.spriteWidth * 3 &&
-          lasers[0].y - 10 - lasers[0].velocity > beamEnemy.y &&
-          lasers[0].y - 10 - lasers[0].velocity <
-            beamEnemy.y + beamEnemy.spriteHeight * 3
-        ) {
-          beamEnemies.splice(index, 1);
-        } else if (
-          lasers[0].single.right.x > beamEnemy.x &&
-          lasers[0].single.right.x < beamEnemy.x + beamEnemy.spriteWidth * 3 &&
-          lasers[0].y - 10 - lasers[0].velocity > beamEnemy.y &&
-          lasers[0].y - 10 - lasers[0].velocity <
-            beamEnemy.y + beamEnemy.spriteHeight * 3
-        ) {
-          beamEnemies.splice(index, 1);
-        }
-      }
+      beamEnemy.playerLaserColision(ctx, beamEnemy, index);
     }
 
     // pushing new items to the enemy array
-    if (beamEnemies.length < 3) {
+    if (beamEnemies.length < 1 && sceneDrawnFrame >= 300) {
       const beamCannonEnemy = new BeamEnemy(
         3,
         1,
@@ -232,16 +268,36 @@ export default function beamEnemy(
         0,
         2,
         0,
-        -50
+        20,
+        0
       );
-      if (beamEnemies.length < 0) {
-        beamEnemies.push(beamCannonEnemy);
-        sceneDrawnFrame = 0;
-      } else if (sceneDrawnFrame >= 60) {
-        beamEnemies.push(beamCannonEnemy);
-        sceneDrawnFrame = 0;
-      }
+      const beamCannonEnemy2 = new BeamEnemy(
+        3,
+        1,
+        resources.images.beamEnemySpriteSheet,
+        0,
+        0,
+        2,
+        0,
+        -50,
+        canvas.width / 3
+      );
+      const beamCannonEnemy3 = new BeamEnemy(
+        3,
+        1,
+        resources.images.beamEnemySpriteSheet,
+        0,
+        0,
+        2,
+        0,
+        -50,
+        -canvas.width / 3
+      );
+      beamEnemies.push(beamCannonEnemy, beamCannonEnemy2, beamCannonEnemy3);
+      sceneDrawnFrame = 0;
     }
     sceneDrawnFrame++;
   }
 }
+
+export { BeamEnemy };

@@ -16,9 +16,13 @@ class InitLaserPair {
       (this.y = playerCoor.y),
       (this.single = {
         right: {
+          destroy: false,
           x: playerCoor.x + player.spriteWidth / 2 + player.spriteWidth * 3,
         },
-        left: { x: playerCoor.x + player.spriteWidth / 2 },
+        left: {
+          destroy: false,
+          x: playerCoor.x + player.spriteWidth / 2,
+        },
       });
   }
 
@@ -27,8 +31,12 @@ class InitLaserPair {
     ctx.shadowOffsetY = 20;
     ctx.shadowBlur = 100;
     ctx.fillStyle = "red";
-    ctx.fillRect(this.single.right.x, this.y - 10 - this.velocity, 3, 40);
-    ctx.fillRect(this.single.left.x, this.y - 10 - this.velocity, 3, 40);
+    if (!this.single.right.destroy) {
+      ctx.fillRect(this.single.right.x, this.y - 10 - this.velocity, 3, 40);
+    }
+    if (!this.single.left.destroy) {
+      ctx.fillRect(this.single.left.x, this.y - 10 - this.velocity, 3, 40);
+    }
   }
 }
 
