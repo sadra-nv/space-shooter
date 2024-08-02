@@ -1,4 +1,5 @@
 import { BeamEnemy } from "./beam-enemy";
+import { CommonEnemy } from "./common-enemy";
 import { InitSprite } from "./img-bucket";
 import { SpriteSheet } from "./sprite-sheet";
 
@@ -15,7 +16,11 @@ class ExplosionSheet extends SpriteSheet {
     super(cols, rows, sprite, spriteSrcX, spriteSrcY, currentFrame, drawnFrame);
   }
 
-  explode(ctx: CanvasRenderingContext2D, enemy: BeamEnemy, scale: number) {
+  explode(
+    ctx: CanvasRenderingContext2D,
+    enemy: BeamEnemy | CommonEnemy,
+    scale: number
+  ) {
     if (enemy.explosionFlag) {
       this.spriteSrcX = this.currentFrame * this.spriteWidth;
       this.drawnFrame++;
@@ -35,7 +40,7 @@ class ExplosionSheet extends SpriteSheet {
         this.currentFrame++;
         this.drawnFrame = 0;
 
-        if (this.currentFrame === 8) {
+        if (this.currentFrame === 9) {
           this.currentFrame = 1;
           enemy.explosionFlag = false;
         }

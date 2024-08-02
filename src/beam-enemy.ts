@@ -1,6 +1,7 @@
 import { playerCoor, start } from "./controls";
 import { ExplosionSheet } from "./explosion-sheet";
 import { InitSprite, resources } from "./img-bucket";
+import { increaseScore } from "./main";
 import { player } from "./player";
 import { lasers } from "./player-lasers";
 import { SpriteSheet } from "./sprite-sheet";
@@ -134,10 +135,10 @@ class BeamEnemy extends SpriteSheet {
     }
 
     // putting some time between the laser beam shots
-    if (this.laserDrawnFrame >= 150 && this.currentFrame == 0) {
-      this.laserIsFired = false;
-      this.laserDrawnFrame = 0;
-    }
+    // if (this.laserDrawnFrame >= 150 && this.currentFrame == 0) {
+    //   this.laserIsFired = false;
+    //   this.laserDrawnFrame = 0;
+    // }
   }
 
   buildUP(ctx: CanvasRenderingContext2D) {
@@ -206,6 +207,7 @@ class BeamEnemy extends SpriteSheet {
           if (this.hp === 0) {
             beamEnemies.splice(index, 1);
             sceneDrawnFrame = 0;
+            increaseScore(30);
           }
         }
       }
@@ -222,6 +224,7 @@ class BeamEnemy extends SpriteSheet {
           if (this.hp === 0) {
             beamEnemies.splice(index, 1);
             sceneDrawnFrame = 0;
+            increaseScore(30);
           }
         }
       }
@@ -232,10 +235,12 @@ class BeamEnemy extends SpriteSheet {
 
   cannonColision() {
     if (
+      !this.laserIsFired &&
       this.x + (this.spriteWidth * 3) / 2 - 12 > playerCoor.x &&
       this.x + (this.spriteWidth * 3) / 2 - 12 <
         playerCoor.x + player.spriteWidth * 4 &&
-      this.y + this.spriteHeight * 3 - 25 + this.laserLength > playerCoor.y
+      this.spriteHeight * 3 - 25 + this.laserLength > playerCoor.y &&
+      playerCoor.y > this.y
     ) {
       player.destroyed = true;
     }
@@ -254,7 +259,7 @@ const explosion = new ExplosionSheet(
   1,
   0
 );
-export default function beamEnemy(
+function beamEnemyNode(
   ctx: CanvasRenderingContext2D,
   canvas: HTMLCanvasElement
 ) {
@@ -296,7 +301,7 @@ export default function beamEnemy(
         0,
         2,
         0,
-        20,
+        10,
         0
       );
       const beamCannonEnemy2 = new BeamEnemy(
@@ -307,7 +312,7 @@ export default function beamEnemy(
         0,
         2,
         0,
-        -50,
+        10,
         canvas.width / 3
       );
       const beamCannonEnemy3 = new BeamEnemy(
@@ -318,12 +323,23 @@ export default function beamEnemy(
         0,
         2,
         0,
-        -50,
+        10,
         -canvas.width / 3
       );
       if (window.innerWidth > 570) {
         beamEnemies.push(beamCannonEnemy, beamCannonEnemy2, beamCannonEnemy3);
       } else {
+        const beamCannonEnemy3 = new BeamEnemy(
+          3,
+          1,
+          resources.images.beamEnemySpriteSheet,
+          0,
+          0,
+          2,
+          0,
+          10,
+          -canvas.width / 3 + 50
+        );
         beamEnemies.push(beamCannonEnemy2, beamCannonEnemy3);
       }
       sceneDrawnFrame = 0;
@@ -332,4 +348,4 @@ export default function beamEnemy(
   }
 }
 
-export { BeamEnemy };
+export { BeamEnemy, beamEnemyNode };

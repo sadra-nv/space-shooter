@@ -10,15 +10,67 @@ html {
   height: 100%;
   overflow: hidden;
   background: black;
+  font-family: Brush Script MT;
 }
 canvas {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  border-left: 2px darkred solid;
-  border-right: 2px darkred solid;
+  border-left: 2px gray solid;
+  border-right: 2px gray solid;
   image-rendering: pixelated;
+}
+
+#score {
+  position: absolute;
+  width: fit-content;
+  right: calc(12.5%);
+  top: 0.5rem;
+  text-align: center;
+  padding: 0 0.5rem;
+  height: fit-content;
+  font-size: 2rem;
+  /* background-color: blue; */
+  border-radius: 100%;
+  color: white;
+}
+
+#results {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: none;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+  width: 400px;
+  height: fit-content;
+  background-color: white;
+  border-radius: 1rem;
+  padding: 1.5rem;
+}
+
+#results h1 {
+  font-size: 2.5rem;
+  font-weight: bold;
+}
+
+#results div {
+  font-size: 2rem;
+  padding: 2rem 0;
+}
+
+#results button {
+  background-color: blue;
+  color: white;
+  font-size: 1rem;
+  font-weight: bold;
+  padding: 0.4rem 0.8rem;
+  border: none;
+  border-radius: 0.3rem;
+  margin-top: 1rem;
 }
 
 @media only screen and (max-width: 570px) {
@@ -26,5 +78,11 @@ canvas {
     border-left: none;
     border-right: none;
     image-rendering: pixelated;
+  }
+  #score {
+    right: 0.5rem;
+  }
+  #results {
+    width: 90%;
   }
 }

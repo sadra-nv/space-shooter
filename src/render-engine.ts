@@ -1,8 +1,10 @@
-import beamEnemy from "./beam-enemy";
+import { beamEnemyNode } from "./beam-enemy";
+import { commonEnemyNode } from "./common-enemy";
 import { Controls } from "./controls";
+import { gameOver } from "./game-cycle";
 import { canvas, ctx } from "./main";
 
-import { playerNode } from "./player";
+import { player, playerNode } from "./player";
 
 let animationID: number;
 
@@ -18,8 +20,15 @@ function RenderEngine() {
 
     playerNode();
 
-    // RENDERING THE BEAM SHOOTING ENEMIES
-    beamEnemy(ctx, canvas);
+    beamEnemyNode(ctx, canvas);
+
+    commonEnemyNode(ctx, canvas);
+
+    if (player.destroyed) {
+      gameOver();
+      // window.location.reload();
+    }
+
     ctx.shadowBlur = 0;
     ctx.shadowOffsetY = 0;
 

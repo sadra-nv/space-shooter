@@ -11,19 +11,19 @@ class InitLaserPair {
   y;
   single;
   constructor() {
-    (this.velocity = 0),
-      (this.drawnFrame = 0),
-      (this.y = playerCoor.y),
-      (this.single = {
-        right: {
-          destroy: false,
-          x: playerCoor.x + player.spriteWidth / 2 + player.spriteWidth * 3,
-        },
-        left: {
-          destroy: false,
-          x: playerCoor.x + player.spriteWidth / 2,
-        },
-      });
+    this.velocity = 0;
+    this.drawnFrame = 0;
+    this.y = playerCoor.y;
+    this.single = {
+      right: {
+        destroy: false,
+        x: playerCoor.x + player.spriteWidth / 2 + player.spriteWidth * 3,
+      },
+      left: {
+        destroy: false,
+        x: playerCoor.x + player.spriteWidth / 2,
+      },
+    };
   }
 
   draw(ctx: CanvasRenderingContext2D) {
@@ -50,15 +50,15 @@ function PlayerLasers(
     // rendering lasers based on the lasers array
     for (let index = 0; index < lasers.length; index++) {
       const laserPair = lasers[index];
-      if (laserPair.drawnFrame >= 30) {
-        laserPair.drawnFrame = 0;
-      }
+      // if (laserPair.drawnFrame >= 30) {
+      //   laserPair.drawnFrame = 0;
+      // }
 
       laserPair.draw(ctx);
 
       laserPair.velocity += 20;
 
-      laserPair.drawnFrame++;
+      // laserPair.drawnFrame++;
       if (laserPair.velocity >= canvas.height) {
         lasers.splice(index, 1);
       }

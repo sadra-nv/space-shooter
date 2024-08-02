@@ -1,8 +1,7 @@
 import "./style.css";
 import { RenderEngine } from "./render-engine";
 
-const canvas = <HTMLCanvasElement>document.getElementById("scene");
-
+const canvas = <HTMLCanvasElement>document.querySelector("#scene");
 const drawCanvas = () => {
   canvas.height = window.innerHeight;
   if (window.innerWidth < 570) {
@@ -10,6 +9,16 @@ const drawCanvas = () => {
     return;
   }
   canvas.width = (window.innerWidth / 4) * 3;
+};
+
+let score = 0;
+const scoreTracker = document.querySelector("#score");
+
+const increaseScore = (amount: number) => {
+  score += amount;
+  if (scoreTracker) {
+    scoreTracker.innerHTML = score.toString();
+  }
 };
 
 drawCanvas();
@@ -20,4 +29,4 @@ const ctx = canvas.getContext("2d");
 
 window.onload = RenderEngine;
 
-export { canvas, ctx };
+export { canvas, ctx, increaseScore, score };

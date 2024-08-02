@@ -45,9 +45,11 @@ function Controls() {
       if (!grabbed) {
         canvas.style.cursor = "grab";
       }
-    }
-    if (grabbed) {
-      canvas.style.cursor = "grabbing";
+      if (grabbed) {
+        canvas.style.cursor = "grabbing";
+      }
+    } else {
+      canvas.style.cursor = "default";
     }
 
     prevMousePos = event.offsetX;
@@ -72,9 +74,88 @@ function Controls() {
     grabbed = false;
   };
 
-  canvas?.addEventListener("pointermove", mouseMoveHandler);
-  canvas?.addEventListener("pointerdown", mousePressedHandler);
-  window?.addEventListener("pointerup", mouseReleaseHandler);
+  canvas?.addEventListener("mousemove", mouseMoveHandler);
+  canvas?.addEventListener("mousedown", mousePressedHandler);
+  window?.addEventListener("mouseup", mouseReleaseHandler);
+
+  const handleTouchCoor = (event: TouchEvent) => {
+    if (!event.target) return;
+    const target = event.target as HTMLElement;
+    const rect = target.getBoundingClientRect();
+    const x = event.targetTouches[0].pageX - rect.left;
+    const y = event.targetTouches[0].pageY - rect.top;
+
+    return { x: x, y: y };
+  };
+
+  canvas.addEventListener("touchmove", (event: TouchEvent) => {
+    const touchCoor = handleTouchCoor(event);
+    if (!touchCoor) return;
+
+    if (
+      playerSelected &&
+      touchCoor?.x < canvas.width - player.spriteWidth * 3 &&
+      touchCoor?.x > player.spriteWidth &&
+      touchCoor.y > player.spriteHeight &&
+      touchCoor.y < canvas.height - player.spriteHeight
+    ) {
+      playerCoor.x = touchCoor.x - 25;
+      playerCoor.y = touchCoor.y - player.spriteHeight * 3;
+    }
+
+    if (playerSelected) {
+      if (touchCoor.x - prevMousePos < 0) {
+        screenSide = "LEFT";
+      } else if (touchCoor.x - prevMousePos > 0) {
+        screenSide = "RIGHT";
+      }
+    }
+
+    if (
+      touchCoor.x - playerCoor.x < player.spriteWidth * 4 &&
+      touchCoor.x - playerCoor.x > -player.spriteWidth * 4 &&
+      touchCoor.y - playerCoor.y < player.spriteHeight * 4 &&
+      touchCoor.y - playerCoor.y > -player.spriteHeight
+    ) {
+      if (!grabbed) {
+        canvas.style.cursor = "grab";
+      }
+      if (grabbed) {
+        canvas.style.cursor = "grabbing";
+      }
+    } else {
+      canvas.style.cursor = "default";
+    }
+
+    prevMousePos = touchCoor.x;
+  });
+
+  canvas.addEventListener("touchstart", (event: TouchEvent) => {
+    const touchCoor = handleTouchCoor(event);
+    if (!touchCoor) return;
+
+    if (
+      touchCoor.x - playerCoor.x < player.spriteWidth * 4 &&
+      touchCoor.x - playerCoor.x > -player.spriteWidth * 4 &&
+      touchCoor.y - playerCoor.y < player.spriteHeight * 4 &&
+      touchCoor.y - playerCoor.y > -player.spriteHeight
+    ) {
+      start = true;
+      playerSelected = true;
+      canvas.style.cursor = "grabbing";
+      grabbed = true;
+    }
+  });
+
+  const touchEndHandler = () => {
+    playerSelected = false;
+    screenSide = "NONE";
+    canvas.style.cursor = "default";
+    grabbed = false;
+  };
+
+  canvas.addEventListener("touchend", touchEndHandler);
+  canvas.addEventListener("touchcancel", touchEndHandler);
 }
 
 export {
