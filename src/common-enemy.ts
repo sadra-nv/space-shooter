@@ -1,7 +1,7 @@
 import { CommonEnemyLaser, commonEnemyLaser } from "./common-enemy-laser";
 import { start } from "./controls";
 import { ExplosionSheet } from "./explosion-sheet";
-import { InitSprite, resources } from "./img-bucket";
+// import { InitSprite, resources } from "./img-bucket";
 import { increaseScore } from "./main";
 import { lasers } from "./player-lasers";
 import { SpriteSheet } from "./sprite-sheet";
@@ -22,7 +22,7 @@ class CommonEnemy extends SpriteSheet {
   constructor(
     cols: number,
     rows: number,
-    sprite: InitSprite,
+    sprite: HTMLImageElement,
     spriteSrcX: number,
     spriteSrcY: number,
     currentFrame: number,
@@ -83,7 +83,7 @@ class CommonEnemy extends SpriteSheet {
 
     if (!this.destroyed) {
       ctx.drawImage(
-        this.sprite.image,
+        this.sprite,
         this.spriteSrcX,
         this.spriteSrcY,
         this.spriteWidth,
@@ -148,15 +148,15 @@ class CommonEnemy extends SpriteSheet {
 const commonEnemies: CommonEnemy[] = [];
 let sceneDrawnFrame = 0;
 let enemiesDrawnFrame = 0;
-const explosion = new ExplosionSheet(
-  9,
-  1,
-  resources.images.explosionSpriteSheet,
-  0,
-  0,
-  1,
-  0
-);
+const explosionSprite = document.querySelector(
+  "#explosion"
+) as HTMLImageElement;
+
+const commonEnemySprite = document.querySelector(
+  "#common-enemy"
+) as HTMLImageElement;
+
+const explosion = new ExplosionSheet(9, 1, explosionSprite, 0, 0, 1, 0);
 
 function commonEnemyNode(
   ctx: CanvasRenderingContext2D,
@@ -166,13 +166,11 @@ function commonEnemyNode(
     for (let index = 0; index < commonEnemies.length; index++) {
       const commonEnemy = commonEnemies[index];
 
-      if (commonEnemy.sprite.isLoaded) {
-        commonEnemy.draw(ctx, canvas, index);
+      commonEnemy.draw(ctx, canvas, index);
 
-        commonEnemy.shoot && commonEnemyLaser(ctx, canvas, commonEnemy);
+      commonEnemy.shoot && commonEnemyLaser(ctx, canvas, commonEnemy);
 
-        commonEnemy.playerLaserColision(ctx);
-      }
+      commonEnemy.playerLaserColision(ctx);
     }
 
     // pushing new items to the enemy array
@@ -189,7 +187,7 @@ function commonEnemyNode(
       const commonEnemy = new CommonEnemy(
         5,
         1,
-        resources.images.commonEnemySpriteSheet,
+        commonEnemySprite,
         0,
         0,
         2,

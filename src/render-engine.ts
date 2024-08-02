@@ -26,7 +26,6 @@ function RenderEngine() {
 
     if (player.destroyed) {
       gameOver();
-      // window.location.reload();
     }
 
     ctx.shadowBlur = 0;

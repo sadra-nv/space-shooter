@@ -1,13 +1,13 @@
 import { BeamEnemy } from "./beam-enemy";
 import { CommonEnemy } from "./common-enemy";
-import { InitSprite } from "./img-bucket";
+// import { InitSprite } from "./img-bucket";
 import { SpriteSheet } from "./sprite-sheet";
 
 class ExplosionSheet extends SpriteSheet {
   constructor(
     cols: number,
     rows: number,
-    sprite: InitSprite,
+    sprite: HTMLImageElement,
     spriteSrcX: number,
     spriteSrcY: number,
     currentFrame: number,
@@ -27,7 +27,7 @@ class ExplosionSheet extends SpriteSheet {
       if (this.drawnFrame > 1) {
         ctx.shadowColor = "transparent";
         ctx.drawImage(
-          this.sprite.image,
+          this.sprite,
           this.spriteSrcX,
           this.spriteSrcY,
           this.spriteWidth,

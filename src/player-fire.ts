@@ -1,5 +1,5 @@
 import { playerCoor, playerSelected } from "./controls";
-import { InitSprite, resources } from "./img-bucket";
+// import { InitSprite, resources } from "./img-bucket";
 import { player } from "./player";
 import { SpriteSheet } from "./sprite-sheet";
 
@@ -9,7 +9,7 @@ class EngineFire extends SpriteSheet {
   constructor(
     cols: number,
     rows: number,
-    sprite: InitSprite,
+    sprite: HTMLImageElement,
     spriteSrcX: number,
     spriteSrcY: number,
     currentFrame: number,
@@ -25,7 +25,7 @@ class EngineFire extends SpriteSheet {
     ctx.shadowBlur = 20;
     if (!player.destroyed) {
       ctx.drawImage(
-        engineFire.sprite.image,
+        engineFire.sprite,
         engineFire.spriteSrcX,
         engineFire.spriteSrcY,
         engineFire.spriteWidth,
@@ -69,24 +69,15 @@ class EngineFire extends SpriteSheet {
   }
 }
 
-const engineFire = new EngineFire(
-  5,
-  1,
-  resources.images.engineSpriteSheet,
-  0,
-  0,
-  2,
-  0
-);
+const playerEngineSprite = document.querySelector(
+  "#engine"
+) as HTMLImageElement;
+
+const engineFire = new EngineFire(5, 1, playerEngineSprite, 0, 0, 2, 0);
 
 function PlayerFire(ctx: CanvasRenderingContext2D) {
   const isPlayerSelected = playerSelected;
-  if (
-    isPlayerSelected &&
-    engineFire.sprite.image &&
-    engineFire.sprite.isLoaded &&
-    ctx
-  ) {
+  if (isPlayerSelected && ctx) {
     // drawing the engines fire
     engineFire.draw(ctx);
     // animating the engines fire

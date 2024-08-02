@@ -51,5 +51,13 @@ class Resources {
   }
 }
 
+const bucket = function (src: string) {
+  const sprite = new Image();
+  sprite.src = src;
+  return sprite.onload;
+};
+
+export { bucket };
+
 // Create one instance for the whole app to use
 export const resources = new Resources();

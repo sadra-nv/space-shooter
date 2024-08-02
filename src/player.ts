@@ -1,6 +1,6 @@
 import { canvas, ctx } from "./main";
 import { playerCoor, playerSelected, screenSide, start } from "./controls";
-import { InitSprite, resources } from "./img-bucket";
+// import { InitSprite, resources } from "./img-bucket";
 import { PlayerFire } from "./player-fire";
 import { PlayerLasers } from "./player-lasers";
 import { SpriteSheet } from "./sprite-sheet";
@@ -11,7 +11,7 @@ class Player extends SpriteSheet {
   constructor(
     cols: number,
     rows: number,
-    sprite: InitSprite,
+    sprite: HTMLImageElement,
     spriteSrcX: number,
     spriteSrcY: number,
     currentFrame: number,
@@ -25,7 +25,7 @@ class Player extends SpriteSheet {
   draw(ctx: CanvasRenderingContext2D) {
     if (!this.destroyed) {
       ctx.drawImage(
-        this.sprite.image,
+        this.sprite,
         this.spriteSrcX,
         this.spriteSrcY,
         this.spriteWidth,
@@ -43,7 +43,7 @@ class Player extends SpriteSheet {
       this.gravity = 0;
     } else if (start) {
       this.gravity = 1;
-      if (playerCoor.y === canvas.height - this.spriteHeight * 4) {
+      if (playerCoor.y > canvas.height - this.spriteHeight * 4) {
         this.gravity = 0;
       }
     }
@@ -91,7 +91,8 @@ class Player extends SpriteSheet {
   }
 }
 
-const player = new Player(5, 1, resources.images.playerSpriteSheet, 0, 0, 2, 0);
+const playerSprite = document.querySelector("#player") as HTMLImageElement;
+const player = new Player(5, 1, playerSprite, 0, 0, 2, 0);
 
 function playerNode() {
   const isPlayerSelected = playerSelected;
@@ -99,7 +100,7 @@ function playerNode() {
   // applying gravity
   player.handleGravity(isPlayerSelected);
 
-  if (player.sprite.image && player.sprite.isLoaded && ctx) {
+  if (ctx) {
     if (isPlayerSelected) {
       ctx.shadowColor = "gray";
       ctx.shadowBlur = 1;

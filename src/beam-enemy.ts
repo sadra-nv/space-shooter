@@ -1,6 +1,6 @@
 import { playerCoor, start } from "./controls";
 import { ExplosionSheet } from "./explosion-sheet";
-import { InitSprite, resources } from "./img-bucket";
+// import { InitSprite, resources } from "./img-bucket";
 import { increaseScore } from "./main";
 import { player } from "./player";
 import { lasers } from "./player-lasers";
@@ -25,7 +25,7 @@ class BeamEnemy extends SpriteSheet {
   constructor(
     cols: number,
     rows: number,
-    sprite: InitSprite,
+    sprite: HTMLImageElement,
     spriteSrcX: number,
     spriteSrcY: number,
     currentFrame: number,
@@ -72,7 +72,7 @@ class BeamEnemy extends SpriteSheet {
     this.y += this.velocity;
 
     ctx.drawImage(
-      this.sprite.image,
+      this.sprite,
       this.spriteSrcX,
       0,
       this.spriteWidth,
@@ -250,15 +250,15 @@ class BeamEnemy extends SpriteSheet {
 const beamEnemies: BeamEnemy[] = [];
 let sceneDrawnFrame = 0;
 
-const explosion = new ExplosionSheet(
-  9,
-  1,
-  resources.images.explosionSpriteSheet,
-  0,
-  0,
-  1,
-  0
-);
+const explosionSprite = document.querySelector(
+  "#explosion"
+) as HTMLImageElement;
+
+const beamEnemySprite = document.querySelector(
+  "#beam-enemy"
+) as HTMLImageElement;
+
+const explosion = new ExplosionSheet(9, 1, explosionSprite, 0, 0, 1, 0);
 function beamEnemyNode(
   ctx: CanvasRenderingContext2D,
   canvas: HTMLCanvasElement
@@ -269,20 +269,18 @@ function beamEnemyNode(
       beamEnemy.spriteSrcX = beamEnemy.currentFrame * beamEnemy.spriteWidth;
       beamEnemy.x = canvas.width / 2 + beamEnemy.id - beamEnemy.spriteWidth * 3;
 
-      if (beamEnemy.sprite.image && beamEnemy.sprite.isLoaded) {
-        // drawing the enemies
-        beamEnemy.draw(ctx, canvas);
-        beamEnemy.drawnFrame++;
+      // drawing the enemies
+      beamEnemy.draw(ctx, canvas);
+      beamEnemy.drawnFrame++;
 
-        // MOVING DOWN FROM THE SCREEN TOP
-        beamEnemy.moveDown();
+      // MOVING DOWN FROM THE SCREEN TOP
+      beamEnemy.moveDown();
 
-        // TURNING THE LASER ON
-        beamEnemy.laserON(ctx, canvas);
+      // TURNING THE LASER ON
+      beamEnemy.laserON(ctx, canvas);
 
-        // THE LASER BUILD UP
-        beamEnemy.buildUP(ctx);
-      }
+      // THE LASER BUILD UP
+      beamEnemy.buildUP(ctx);
 
       //COLISION DETECTION
       beamEnemy.playerLaserColision(ctx, index);
@@ -296,7 +294,7 @@ function beamEnemyNode(
       const beamCannonEnemy = new BeamEnemy(
         3,
         1,
-        resources.images.beamEnemySpriteSheet,
+        beamEnemySprite,
         0,
         0,
         2,
@@ -307,7 +305,7 @@ function beamEnemyNode(
       const beamCannonEnemy2 = new BeamEnemy(
         3,
         1,
-        resources.images.beamEnemySpriteSheet,
+        beamEnemySprite,
         0,
         0,
         2,
@@ -318,7 +316,7 @@ function beamEnemyNode(
       const beamCannonEnemy3 = new BeamEnemy(
         3,
         1,
-        resources.images.beamEnemySpriteSheet,
+        beamEnemySprite,
         0,
         0,
         2,
@@ -332,7 +330,7 @@ function beamEnemyNode(
         const beamCannonEnemy3 = new BeamEnemy(
           3,
           1,
-          resources.images.beamEnemySpriteSheet,
+          beamEnemySprite,
           0,
           0,
           2,

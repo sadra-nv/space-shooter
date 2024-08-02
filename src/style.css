@@ -31,9 +31,9 @@ canvas {
   padding: 0 0.5rem;
   height: fit-content;
   font-size: 2rem;
-  /* background-color: blue; */
   border-radius: 100%;
   color: white;
+  pointer-events: none;
 }
 
 #results {
@@ -71,6 +71,12 @@ canvas {
   border: none;
   border-radius: 0.3rem;
   margin-top: 1rem;
+  font-family: Brush Script MT;
+}
+
+img {
+  display: none;
+  pointer-events: none;
 }
 
 @media only screen and (max-width: 570px) {

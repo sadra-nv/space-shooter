@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Vite + TS</title>
-    <script type="module" src="/src/img-bucket.ts"></script>
+    <!-- <script type="module" src="/src/img-bucket.ts"></script> -->
   </head>
   <body>
     <canvas id="scene"></canvas>
@@ -17,6 +17,12 @@
       </div>
       <button>Restart</button>
     </div>
+
+    <img src="/public/tyrian-space-ship.png" id="player" />
+    <img src="/public/jet-engine-sprite.png" id="engine" />
+    <img src="/public/beam-enemy.png" id="beam-enemy" />
+    <img src="/public/common-enemy.png" id="common-enemy" />
+    <img src="/public/explosion.png" id="explosion" />
 
     <script type="module" src="/src/main.ts"></script>
   </body>

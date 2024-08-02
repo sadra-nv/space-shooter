@@ -1,4 +1,4 @@
-import { InitSprite } from "./img-bucket";
+// import { InitSprite } from "./img-bucket";
 
 class SpriteSheet {
   cols;
@@ -13,7 +13,7 @@ class SpriteSheet {
   constructor(
     cols: number,
     rows: number,
-    sprite: InitSprite,
+    sprite: HTMLImageElement,
     spriteSrcX: number,
     spriteSrcY: number,
     currentFrame: number,
@@ -22,8 +22,8 @@ class SpriteSheet {
     this.cols = cols;
     this.rows = rows;
     this.sprite = sprite;
-    this.spriteHeight = this.sprite.image.height / this.rows;
-    this.spriteWidth = this.sprite.image.width / this.cols;
+    this.spriteHeight = this.sprite.height / this.rows;
+    this.spriteWidth = this.sprite.width / this.cols;
     this.spriteSrcX = spriteSrcX;
     this.spriteSrcY = spriteSrcY;
     this.currentFrame = currentFrame;
