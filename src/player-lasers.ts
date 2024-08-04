@@ -1,5 +1,6 @@
 import { playerCoor, playerSelected, start } from "./controls";
 import { player } from "./player";
+import { sfx } from "./sfx";
 
 // setting up lasers
 const lasers: InitLaserPair[] = [];
@@ -71,10 +72,12 @@ function PlayerLasers(
 
       if (lasers.length < 1) {
         lasers.push(initLaserPair);
+        sfx.laser.play();
       } else if (laserCounter >= 60 && prevY === playerCoor.y) {
         lasers.push(initLaserPair);
         laserCounter = 0;
         prevY = playerCoor.y;
+        sfx.laser.play();
       }
       laserCounter++;
     }

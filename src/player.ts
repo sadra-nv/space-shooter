@@ -99,8 +99,8 @@ function playerNode() {
 
   // applying gravity
   player.handleGravity(isPlayerSelected);
-
   if (ctx) {
+    ctx.shadowBlur = 0;
     if (isPlayerSelected) {
       ctx.shadowColor = "gray";
       ctx.shadowBlur = 1;

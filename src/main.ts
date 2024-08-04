@@ -2,6 +2,7 @@ import "./style.css";
 import { RenderEngine } from "./render-engine";
 
 const canvas = <HTMLCanvasElement>document.querySelector("#scene");
+canvas.addEventListener("click", () => {});
 const drawCanvas = () => {
   canvas.height = window.innerHeight;
   if (window.innerWidth < 570) {

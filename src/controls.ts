@@ -1,19 +1,32 @@
 import { canvas } from "./main";
 import { player } from "./player";
+import { sfx } from "./sfx";
 
 let start = false;
 let playerSelected = false;
 let grabbed = false;
 let screenSide: "LEFT" | "RIGHT" | "NONE"; //USED FOR ANIMATING THE SHIP SPRITE
 let prevMousePos: number;
+let theme = false;
 
 const playerCoor = {
   x: window.innerWidth / 2 - player.spriteWidth,
   y: window.innerHeight - player.spriteHeight * 4,
 };
 
+const handleTheme = () => {
+  if (
+    !theme &&
+    localStorage.getItem("mute") !== "false" &&
+    !sfx.theme.playing(1006)
+  ) {
+    sfx.theme.play();
+    theme = true;
+  }
+};
+
 function Controls() {
-  playerCoor.x = canvas.width / 2 - player.spriteWidth;
+  playerCoor.x = canvas.width / 2 - player.spriteWidth * 2;
   playerCoor.y = canvas.height - player.spriteHeight * 4;
 
   const mouseMoveHandler = (event: MouseEvent) => {
@@ -65,6 +78,7 @@ function Controls() {
       playerSelected = true;
       canvas.style.cursor = "grabbing";
       grabbed = true;
+      handleTheme();
     }
   };
   const mouseReleaseHandler = () => {
@@ -144,6 +158,7 @@ function Controls() {
       playerSelected = true;
       canvas.style.cursor = "grabbing";
       grabbed = true;
+      handleTheme();
     }
   });
 

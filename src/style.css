@@ -10,7 +10,7 @@ html {
   height: 100%;
   overflow: hidden;
   background: black;
-  font-family: Brush Script MT;
+  font-family: "Audiowide", Brush Script MT;
 }
 canvas {
   position: absolute;
@@ -25,7 +25,7 @@ canvas {
 #score {
   position: absolute;
   width: fit-content;
-  right: calc(12.5%);
+  right: 12.5%;
   top: 0.5rem;
   text-align: center;
   padding: 0 0.5rem;
@@ -50,6 +50,7 @@ canvas {
   background-color: white;
   border-radius: 1rem;
   padding: 1.5rem;
+  padding-top: 1.3rem;
 }
 
 #results h1 {
@@ -64,6 +65,7 @@ canvas {
 
 #results button {
   background-color: blue;
+  cursor: pointer;
   color: white;
   font-size: 1rem;
   font-weight: bold;
@@ -71,12 +73,34 @@ canvas {
   border: none;
   border-radius: 0.3rem;
   margin-top: 1rem;
-  font-family: Brush Script MT;
+  font-family: "Audiowide", Brush Script MT;
+  transition: 0.2s ease-in all;
+}
+#results button:hover {
+  background-color: rgb(65, 65, 255);
 }
 
 img {
   display: none;
   pointer-events: none;
+}
+
+#mute {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  position: absolute;
+  left: 13%;
+  top: 0.5rem;
+}
+
+.on svg:first-child,
+.off svg:last-child {
+  display: none;
+}
+.on svg:last-child,
+.off svg:first-child {
+  display: block;
 }
 
 @media only screen and (max-width: 570px) {

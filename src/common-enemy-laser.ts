@@ -1,6 +1,7 @@
 import { CommonEnemy } from "./common-enemy";
 import { playerCoor } from "./controls";
 import { player } from "./player";
+import { sfx } from "./sfx";
 
 class CommonEnemyLaser {
   velocity;
@@ -61,6 +62,7 @@ function commonEnemyLaser(
 
   // pushing new items to the lasers array
   if (commonEnemy.laserDrawnFrame >= 200 && !commonEnemy.destroyed) {
+    sfx.laser2.play();
     const commonEnemyLaser = new CommonEnemyLaser(commonEnemy);
     commonEnemy.lasers.push(commonEnemyLaser);
     commonEnemy.laserDrawnFrame = 0;

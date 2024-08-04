@@ -4,6 +4,7 @@ import { ExplosionSheet } from "./explosion-sheet";
 // import { InitSprite, resources } from "./img-bucket";
 import { increaseScore } from "./main";
 import { lasers } from "./player-lasers";
+import { sfx } from "./sfx";
 import { SpriteSheet } from "./sprite-sheet";
 
 class CommonEnemy extends SpriteSheet {
@@ -126,6 +127,7 @@ class CommonEnemy extends SpriteSheet {
         this.explosionFlag = true;
         this.destroyed = true;
         increaseScore(10);
+        sfx.explosion.play();
       }
       if (
         !this.destroyed &&
@@ -138,6 +140,7 @@ class CommonEnemy extends SpriteSheet {
         this.explosionFlag = true;
         this.destroyed = true;
         increaseScore(10);
+        sfx.explosion.play();
       }
     }
 

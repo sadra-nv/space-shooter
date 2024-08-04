@@ -1,5 +1,5 @@
 {
-  "name": "particl-pic",
+  "name": "space-shooter",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -9,7 +9,11 @@
     "preview": "vite preview"
   },
   "devDependencies": {
+    "@types/howler": "^2.2.11",
     "typescript": "^5.2.2",
     "vite": "^5.3.4"
+  },
+  "dependencies": {
+    "howler": "^2.2.4"
   }
 }

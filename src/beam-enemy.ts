@@ -4,6 +4,7 @@ import { ExplosionSheet } from "./explosion-sheet";
 import { increaseScore } from "./main";
 import { player } from "./player";
 import { lasers } from "./player-lasers";
+import { sfx } from "./sfx";
 import { SpriteSheet } from "./sprite-sheet";
 
 class BeamEnemy extends SpriteSheet {
@@ -204,6 +205,7 @@ class BeamEnemy extends SpriteSheet {
         if (!this.invisibility) {
           this.hp--;
           this.explosionFlag = true;
+          sfx.explosion.play();
           if (this.hp === 0) {
             beamEnemies.splice(index, 1);
             sceneDrawnFrame = 0;
@@ -221,6 +223,7 @@ class BeamEnemy extends SpriteSheet {
         if (!this.invisibility) {
           this.hp--;
           this.explosionFlag = true;
+          sfx.explosion.play();
           if (this.hp === 0) {
             beamEnemies.splice(index, 1);
             sceneDrawnFrame = 0;
@@ -267,7 +270,8 @@ function beamEnemyNode(
     for (let index = 0; index < beamEnemies.length; index++) {
       const beamEnemy = beamEnemies[index];
       beamEnemy.spriteSrcX = beamEnemy.currentFrame * beamEnemy.spriteWidth;
-      beamEnemy.x = canvas.width / 2 + beamEnemy.id - beamEnemy.spriteWidth * 3;
+      beamEnemy.x =
+        canvas.width / 2 + beamEnemy.id - beamEnemy.spriteWidth * 1.5;
 
       // drawing the enemies
       beamEnemy.draw(ctx, canvas);
@@ -324,20 +328,10 @@ function beamEnemyNode(
         10,
         -canvas.width / 3
       );
+      sceneDrawnFrame > 190 && sfx.cannon.play();
       if (window.innerWidth > 570) {
         beamEnemies.push(beamCannonEnemy, beamCannonEnemy2, beamCannonEnemy3);
       } else {
-        const beamCannonEnemy3 = new BeamEnemy(
-          3,
-          1,
-          beamEnemySprite,
-          0,
-          0,
-          2,
-          0,
-          10,
-          -canvas.width / 3 + 50
-        );
         beamEnemies.push(beamCannonEnemy2, beamCannonEnemy3);
       }
       sceneDrawnFrame = 0;
