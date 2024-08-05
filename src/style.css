@@ -25,10 +25,10 @@ canvas {
 #score {
   position: absolute;
   width: fit-content;
-  right: 12.5%;
+  right: 14%;
   top: 0.5rem;
   text-align: center;
-  padding: 0 0.5rem;
+  /* padding: 0 0.5rem; */
   height: fit-content;
   font-size: 2rem;
   border-radius: 100%;
@@ -51,6 +51,24 @@ canvas {
   border-radius: 1rem;
   padding: 1.5rem;
   padding-top: 1.3rem;
+  animation: fade forwards 0.5s ease-out;
+}
+
+@keyframes fade {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -100%);
+  }
+
+  80% {
+    opacity: 1;
+    transform: translate(-50%, -40%);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
 }
 
 #results h1 {
@@ -90,8 +108,8 @@ img {
   border: none;
   cursor: pointer;
   position: absolute;
-  left: 13%;
-  top: 0.5rem;
+  left: 14%;
+  top: 0.9rem;
 }
 
 .on svg:first-child,
@@ -110,7 +128,16 @@ img {
     image-rendering: pixelated;
   }
   #score {
-    right: 0.5rem;
+    right: 0.9rem;
+  }
+  #results h1 {
+    font-size: 2rem;
+  }
+  #results div {
+    font-size: 1.5rem;
+  }
+  #mute {
+    left: 0.9rem;
   }
   #results {
     width: 90%;
