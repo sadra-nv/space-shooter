@@ -5,7 +5,7 @@ const sfx = {
     src: "/01AsteroidDancePart1.mp3",
     loop: true,
     volume: 0.7,
-    // html5: true,
+    html5: true,
   }),
   laser: new Howl({
     src: "/mixkit-laser-weapon-shot-1681.wav",
