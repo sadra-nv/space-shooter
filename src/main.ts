@@ -28,6 +28,6 @@ window.addEventListener("resize", drawCanvas);
 
 const ctx = canvas.getContext("2d");
 
-document.onload = RenderEngine;
+window.onload = RenderEngine;
 
 export { canvas, ctx, increaseScore, score };
