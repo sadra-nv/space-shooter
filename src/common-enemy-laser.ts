@@ -9,25 +9,28 @@ class CommonEnemyLaser {
   y;
   x;
   count: CommonEnemyLaser[];
-  constructor(commonEnemy: CommonEnemy) {
+  deltaTime: number;
+
+  constructor(commonEnemy: CommonEnemy, deltaTime: number) {
     this.velocity = 0;
     this.drawnFrame = 0;
     this.y = commonEnemy.y + commonEnemy.spriteHeight * 3;
     this.x = commonEnemy.x + 5;
     this.count = [];
+    this.deltaTime = deltaTime;
   }
 
   draw(
     ctx: CanvasRenderingContext2D,
     commonEnemy: CommonEnemy,
     canvas: HTMLCanvasElement,
-    index: number
+    index: number,
   ) {
     ctx.shadowColor = "red";
     ctx.shadowOffsetY = 20;
     ctx.shadowBlur = 100;
     ctx.fillStyle = "red";
-    this.y += this.velocity;
+    this.y += this.velocity * 0.02 * this.deltaTime;
     this.velocity++;
     ctx.fillRect(this.x, this.y, 3, 40);
 
@@ -51,7 +54,8 @@ class CommonEnemyLaser {
 function commonEnemyLaser(
   ctx: CanvasRenderingContext2D,
   canvas: HTMLCanvasElement,
-  commonEnemy: CommonEnemy
+  commonEnemy: CommonEnemy,
+  deltaTime: number,
 ) {
   for (let index = 0; index < commonEnemy.lasers.length; index++) {
     const commonEnemyLaser = commonEnemy.lasers[index];
@@ -63,7 +67,7 @@ function commonEnemyLaser(
   // pushing new items to the lasers array
   if (commonEnemy.laserDrawnFrame >= 200 && !commonEnemy.destroyed) {
     sfx.laser2.play();
-    const commonEnemyLaser = new CommonEnemyLaser(commonEnemy);
+    const commonEnemyLaser = new CommonEnemyLaser(commonEnemy, deltaTime);
     commonEnemy.lasers.push(commonEnemyLaser);
     commonEnemy.laserDrawnFrame = 0;
   }

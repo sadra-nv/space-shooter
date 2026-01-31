@@ -23,6 +23,8 @@ class BeamEnemy extends SpriteSheet {
   explosionFlag;
   gravity;
   gravityDrawnFrame;
+  deltaTime: number;
+
   constructor(
     cols: number,
     rows: number,
@@ -32,7 +34,8 @@ class BeamEnemy extends SpriteSheet {
     currentFrame: number,
     drawnFrame: number,
     y: number,
-    id: number
+    id: number,
+    deltaTime: number,
   ) {
     super(cols, rows, sprite, spriteSrcX, spriteSrcY, currentFrame, drawnFrame);
     this.laserDrawnFrame = 0;
@@ -50,6 +53,7 @@ class BeamEnemy extends SpriteSheet {
     this.explosionFlag = false;
     this.gravity = 0;
     this.gravityDrawnFrame = 0;
+    this.deltaTime = deltaTime;
   }
 
   draw(ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement) {
@@ -59,7 +63,7 @@ class BeamEnemy extends SpriteSheet {
 
     if (this.gravityDrawnFrame > 10 && this.laserIsFired) {
       this.gravity++;
-      this.velocity += this.gravity;
+      this.velocity += this.gravity * this.deltaTime * 0.2;
       this.gravity = 0;
       this.gravityDrawnFrame = 0;
     }
@@ -70,7 +74,7 @@ class BeamEnemy extends SpriteSheet {
       beamEnemies.length = 0;
     }
 
-    this.y += this.velocity;
+    this.y += this.velocity * this.deltaTime * 0.04;
 
     ctx.drawImage(
       this.sprite,
@@ -81,7 +85,7 @@ class BeamEnemy extends SpriteSheet {
       this.x,
       this.y,
       this.spriteWidth * 3,
-      this.spriteHeight * 3
+      this.spriteHeight * 3,
     );
   }
 
@@ -109,7 +113,7 @@ class BeamEnemy extends SpriteSheet {
         this.x + (this.spriteWidth * 3) / 2 - 12,
         0,
         this.x + (this.spriteWidth * 3) / 2 + 9,
-        0
+        0,
       );
       gradient.addColorStop(0, "blue");
       gradient.addColorStop(0.5, "skyblue");
@@ -124,10 +128,10 @@ class BeamEnemy extends SpriteSheet {
         this.y + this.spriteHeight * 3 - 25,
         20,
         this.laserLength,
-        20
+        20,
       );
       ctx.fill();
-      this.laserLength += 30;
+      this.laserLength += 30 * 0.04 * this.deltaTime;
       if (this.laserLength >= canvas.height * 3) {
         this.laserDrawnFrame = 0;
         this.laserLength = 0;
@@ -150,7 +154,7 @@ class BeamEnemy extends SpriteSheet {
             this.x + (this.spriteWidth * 3) / 2 + 10,
             0,
             this.x + (this.spriteWidth * 3) / 2 - 10,
-            0
+            0,
           );
           gradient.addColorStop(0, "blue");
           gradient.addColorStop(0.5, "skyblue");
@@ -184,7 +188,7 @@ class BeamEnemy extends SpriteSheet {
         this.laserBuildUpWidth,
         0,
         Math.PI * 2,
-        false
+        false,
       );
       ctx.fill();
 
@@ -254,17 +258,18 @@ const beamEnemies: BeamEnemy[] = [];
 let sceneDrawnFrame = 0;
 
 const explosionSprite = document.querySelector(
-  "#explosion"
+  "#explosion",
 ) as HTMLImageElement;
 
 const beamEnemySprite = document.querySelector(
-  "#beam-enemy"
+  "#beam-enemy",
 ) as HTMLImageElement;
 
 const explosion = new ExplosionSheet(9, 1, explosionSprite, 0, 0, 1, 0);
 function beamEnemyNode(
   ctx: CanvasRenderingContext2D,
-  canvas: HTMLCanvasElement
+  canvas: HTMLCanvasElement,
+  deltaTime: number,
 ) {
   if (start) {
     for (let index = 0; index < beamEnemies.length; index++) {
@@ -304,7 +309,8 @@ function beamEnemyNode(
         2,
         0,
         10,
-        0
+        0,
+        deltaTime,
       );
       const beamCannonEnemy2 = new BeamEnemy(
         3,
@@ -315,7 +321,8 @@ function beamEnemyNode(
         2,
         0,
         10,
-        canvas.width / 3
+        canvas.width / 3,
+        deltaTime,
       );
       const beamCannonEnemy3 = new BeamEnemy(
         3,
@@ -326,7 +333,8 @@ function beamEnemyNode(
         2,
         0,
         10,
-        -canvas.width / 3
+        -canvas.width / 3,
+        deltaTime,
       );
       sceneDrawnFrame > 190 && sfx.cannon.play();
       if (window.innerWidth > 570) {

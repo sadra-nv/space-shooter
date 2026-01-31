@@ -57,11 +57,18 @@ function drawDots(ctx: CanvasRenderingContext2D) {
 
 function RenderEngine() {
   if (!ctx) return;
+  let time = Date.now();
+
   Controls();
   createDots();
 
   const renderer = () => {
     if (!ctx) return;
+
+    const currentTime = Date.now();
+    const deltaTime = currentTime - time;
+    time = currentTime;
+
     if (GAME_OVER) {
       return;
     }
@@ -69,11 +76,11 @@ function RenderEngine() {
 
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
-    playerNode();
+    playerNode({ deltaTime });
 
-    beamEnemyNode(ctx, canvas);
+    beamEnemyNode(ctx, canvas, deltaTime);
 
-    commonEnemyNode(ctx, canvas);
+    commonEnemyNode(ctx, canvas, deltaTime);
 
     drawDots(ctx);
     if (start) {

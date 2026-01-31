@@ -15,7 +15,7 @@ class Player extends SpriteSheet {
     spriteSrcX: number,
     spriteSrcY: number,
     currentFrame: number,
-    drawnFrame: number
+    drawnFrame: number,
   ) {
     super(cols, rows, sprite, spriteSrcX, spriteSrcY, currentFrame, drawnFrame);
     this.gravity = 0;
@@ -33,12 +33,12 @@ class Player extends SpriteSheet {
         playerCoor.x,
         playerCoor.y,
         this.spriteWidth * 4,
-        this.spriteHeight * 4
+        this.spriteHeight * 4,
       );
     }
   }
 
-  handleGravity(isPlayerSelected: boolean) {
+  handleGravity(isPlayerSelected: boolean, deltaTime: number) {
     if (isPlayerSelected) {
       this.gravity = 0;
     } else if (start) {
@@ -47,7 +47,7 @@ class Player extends SpriteSheet {
         this.gravity = 0;
       }
     }
-    playerCoor.y += this.gravity;
+    playerCoor.y += this.gravity * deltaTime * 0.2;
   }
 
   animate() {
@@ -94,11 +94,11 @@ class Player extends SpriteSheet {
 const playerSprite = document.querySelector("#player") as HTMLImageElement;
 const player = new Player(5, 1, playerSprite, 0, 0, 2, 0);
 
-function playerNode() {
+function playerNode({ deltaTime }: { deltaTime: number }) {
   const isPlayerSelected = playerSelected;
 
   // applying gravity
-  player.handleGravity(isPlayerSelected);
+  player.handleGravity(isPlayerSelected, deltaTime);
   if (ctx) {
     ctx.shadowBlur = 0;
     if (isPlayerSelected) {
@@ -117,7 +117,7 @@ function playerNode() {
   PlayerFire(ctx as CanvasRenderingContext2D);
 
   //ANIMATING THE LASERS
-  PlayerLasers(ctx as CanvasRenderingContext2D, canvas);
+  PlayerLasers(ctx as CanvasRenderingContext2D, canvas, deltaTime);
 }
 
 export { player, playerNode };

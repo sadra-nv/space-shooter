@@ -20,6 +20,8 @@ class CommonEnemy extends SpriteSheet {
   destroyed;
   explosionFlag;
   direction;
+  deltaTime: number;
+
   constructor(
     cols: number,
     rows: number,
@@ -28,7 +30,8 @@ class CommonEnemy extends SpriteSheet {
     spriteSrcY: number,
     currentFrame: number,
     drawnFrame: number,
-    direction: "RIGHT" | "LEFT"
+    direction: "RIGHT" | "LEFT",
+    deltaTime: number,
   ) {
     super(cols, rows, sprite, spriteSrcX, spriteSrcY, currentFrame, drawnFrame);
     this.gravity = 0;
@@ -43,12 +46,13 @@ class CommonEnemy extends SpriteSheet {
     this.destroyed = false;
     this.explosionFlag = false;
     this.direction = direction;
+    this.deltaTime = deltaTime;
   }
 
   draw(
     ctx: CanvasRenderingContext2D,
     canvas: HTMLCanvasElement,
-    index: number
+    index: number,
   ) {
     this.spriteSrcX = this.currentFrame * this.spriteWidth;
     ctx.shadowColor = "transparent";
@@ -59,9 +63,12 @@ class CommonEnemy extends SpriteSheet {
     }
 
     if (this.direction === "RIGHT") {
-      this.x = canvas.width - this.spriteWidth * 3 + this.velocityX;
+      this.x =
+        canvas.width -
+        this.spriteWidth * 3 +
+        this.velocityX * this.deltaTime * 0.1;
     } else {
-      this.x = 0 - this.velocityX;
+      this.x = 0 - this.velocityX * this.deltaTime * 0.1;
     }
     this.y = canvas.height / 5 + this.velocityY;
 
@@ -92,7 +99,7 @@ class CommonEnemy extends SpriteSheet {
         this.x,
         this.y,
         this.spriteWidth * 3,
-        this.spriteHeight * 3
+        this.spriteHeight * 3,
       );
     }
 
@@ -152,18 +159,19 @@ const commonEnemies: CommonEnemy[] = [];
 let sceneDrawnFrame = 0;
 let enemiesDrawnFrame = 0;
 const explosionSprite = document.querySelector(
-  "#explosion"
+  "#explosion",
 ) as HTMLImageElement;
 
 const commonEnemySprite = document.querySelector(
-  "#common-enemy"
+  "#common-enemy",
 ) as HTMLImageElement;
 
 const explosion = new ExplosionSheet(9, 1, explosionSprite, 0, 0, 1, 0);
 
 function commonEnemyNode(
   ctx: CanvasRenderingContext2D,
-  canvas: HTMLCanvasElement
+  canvas: HTMLCanvasElement,
+  deltaTime: number,
 ) {
   if (start) {
     for (let index = 0; index < commonEnemies.length; index++) {
@@ -171,7 +179,8 @@ function commonEnemyNode(
 
       commonEnemy.draw(ctx, canvas, index);
 
-      commonEnemy.shoot && commonEnemyLaser(ctx, canvas, commonEnemy);
+      commonEnemy.shoot &&
+        commonEnemyLaser(ctx, canvas, commonEnemy, deltaTime);
 
       commonEnemy.playerLaserColision(ctx);
     }
@@ -195,7 +204,8 @@ function commonEnemyNode(
         0,
         2,
         0,
-        direction
+        direction,
+        deltaTime,
       );
 
       commonEnemies.push(commonEnemy);

@@ -11,10 +11,13 @@ class InitLaserPair {
   drawnFrame;
   y;
   single;
-  constructor() {
+  deltaTime: number;
+  constructor(deltaTime: number) {
     this.velocity = 0;
     this.drawnFrame = 0;
     this.y = playerCoor.y;
+    this.deltaTime = deltaTime;
+
     this.single = {
       right: {
         destroy: false,
@@ -43,7 +46,8 @@ class InitLaserPair {
 
 function PlayerLasers(
   ctx: CanvasRenderingContext2D,
-  canvas: HTMLCanvasElement
+  canvas: HTMLCanvasElement,
+  deltaTime: number,
 ) {
   const isPlayerSelected = playerSelected;
 
@@ -57,7 +61,7 @@ function PlayerLasers(
 
       laserPair.draw(ctx);
 
-      laserPair.velocity += 20;
+      laserPair.velocity += 20 * deltaTime * 0.07;
 
       // laserPair.drawnFrame++;
       if (laserPair.velocity >= canvas.height) {
@@ -67,7 +71,7 @@ function PlayerLasers(
 
     // pushing new items to the lasers array
     if (isPlayerSelected && !player.destroyed) {
-      const initLaserPair = new InitLaserPair();
+      const initLaserPair = new InitLaserPair(deltaTime);
       let prevY = 0;
 
       if (lasers.length < 1) {
